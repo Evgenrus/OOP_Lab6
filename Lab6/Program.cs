@@ -6,7 +6,10 @@ namespace Lab6
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            double[,] e = {{1, 2}, {3, 4}};
+            Matrix A = new Matrix(2, e);
+
+            Console.WriteLine(A.ToString());
         }
     }
 }
