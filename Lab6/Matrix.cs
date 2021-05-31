@@ -92,23 +92,88 @@ namespace Lab6
             return max;
         }
 
+        public Matrix OpPlus(Matrix B)
+        {
+            if (!Summarizable(this, B))
+                throw new InvalidOperationException("");
+            
+            for (var i = 0; i < this.Rows; i++)
+            {
+                for (var j = 0; j < this.Columns; j++)
+                {
+                    this.m_data[i, j] += B.m_data[i, j];
+                }
+            }
+
+            return this;
+        }
+
+        public Matrix OpMinus(Matrix B)
+        {
+            if (!Summarizable(this, B))
+                //TODO add exception
+                throw new InvalidOperationException("");
+           
+            for (var i = 0; i < this.Rows; i++)
+            {
+                for (var j = 0; j < this.Columns; j++)
+                {
+                    this.m_data[i, j] -= B.m_data[i, j];
+                }
+            }
+
+            return this;
+        }
+
+        public Matrix OpMultiply(Matrix B)
+        {
+            if (!Multipliable(this, B))
+                throw new InvalidOperationException("");
+            
+            for (var i = 0; i < this.Columns; i++)
+                for (var j = 0; i < B.Rows; j++)
+                    for (var k = 0; k < this.Rows; k++)
+                        this.m_data[i, j] += this.m_data[i, k] * B.m_data[k, j];
+
+            return this;
+        }
+
+        public Matrix OpMultiply(double B)
+        {
+            if (this.m_data == null)
+                throw new ArgumentNullException("this.m_data is null. Can't multiply");
+            
+            for (var i = 0; i < this.Rows; i++)
+            {
+                for (var j = 0; j < this.Columns; j++)
+                {
+                    this.m_data[i, j] *= B;
+                }
+            }
+
+            return this;
+        }
+
         //TODO operators +, -, *(matrix, matrix), *(matrix, double)
         public static Matrix operator +(Matrix A, Matrix B)
         {
             if (!Summarizable(A, B))
                 //TODO add exception
                 throw new InvalidOperationException("");
-            
-            var res = new Matrix(A);
-            for (var i = 0; i < res.Rows; i++)
-            {
-                for (var j = 0; j < res.Columns; j++)
-                {
-                    res.m_data[i, j] += B.m_data[i, j];
-                }
-            }
 
-            return res;
+            var res = new Matrix(A);
+
+            // for (var i = 0; i < res.Rows; i++)
+            // {
+            //     for (var j = 0; j < res.Columns; j++)
+            //     {
+            //         res.m_data[i, j] += B.m_data[i, j];
+            //     }
+            // }
+            //
+            // return res;
+            
+            return res.OpPlus(B);
         }
 
         public static Matrix operator -(Matrix A, Matrix B)
@@ -118,15 +183,8 @@ namespace Lab6
                 throw new InvalidOperationException("");
             
             var res = new Matrix(A);
-            for (var i = 0; i < res.Rows; i++)
-            {
-                for (var j = 0; j < res.Columns; j++)
-                {
-                    res.m_data[i, j] -= B.m_data[i, j];
-                }
-            }
 
-            return res;
+            return res.OpMinus(B);
         }
 
         public static Matrix operator *(Matrix A, Matrix B)
@@ -135,12 +193,8 @@ namespace Lab6
                 throw new InvalidOperationException("");
             
             var res = new Matrix(A);
-            for (var i = 0; i < A.Columns; i++)
-                for (var j = 0; i < B.Rows; j++)
-                    for (var k = 0; k < A.Rows; k++)
-                        res.m_data[i, j] += A.m_data[i, k] * B.m_data[k, j];
-            
-            return res;
+           
+            return res.OpMultiply(B);
         }
 
         public static Matrix operator *(Matrix A, double B)
@@ -149,15 +203,8 @@ namespace Lab6
                 throw new ArgumentNullException("this.m_data is null. Can't multiply");
             
             var res = new Matrix(A);
-            for (var i = 0; i < A.Rows; i++)
-            {
-                for (var j = 0; j < A.Columns; j++)
-                {
-                    A.m_data[i, j] *= B;
-                }
-            }
-
-            return res;
+           
+            return res.OpMultiply(B);
         }
 
         public override string ToString()
@@ -167,7 +214,7 @@ namespace Lab6
             {
                 for (var j = 0; j < Columns; j++)
                     res.AppendFormat("{0}, ", m_data[i, j]);
-                res.Append("\n");
+                res.AppendLine();
             }
             
             return res.ToString();
