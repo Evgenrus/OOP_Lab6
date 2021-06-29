@@ -131,7 +131,7 @@ namespace Lab6
                 throw new InvalidOperationException("");
             
             for (var i = 0; i < this.Columns; i++)
-                for (var j = 0; i < B.Rows; j++)
+                for (var j = 0; j < B.Rows; j++)
                     for (var k = 0; k < this.Rows; k++)
                         this.m_data[i, j] += this.m_data[i, k] * B.m_data[k, j];
 
@@ -162,17 +162,6 @@ namespace Lab6
                 throw new InvalidOperationException("");
 
             var res = new Matrix(A);
-
-            // for (var i = 0; i < res.Rows; i++)
-            // {
-            //     for (var j = 0; j < res.Columns; j++)
-            //     {
-            //         res.m_data[i, j] += B.m_data[i, j];
-            //     }
-            // }
-            //
-            // return res;
-            
             return res.OpPlus(B);
         }
 

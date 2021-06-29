@@ -8,6 +8,10 @@ namespace Lab6
         {
             double[,] e = {{1, 2}, {3, 4}};
             Matrix A = new Matrix(2, e);
+            Console.WriteLine(A.Rows);
+            Console.WriteLine(A.Columns);
+
+            Matrix B = A * new Matrix(2, e);
 
             Console.WriteLine(A.ToString());
         }
